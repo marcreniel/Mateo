@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo } from 'react';
 import { createBrowserClient } from '@supabase/ssr'
 
 export function createClient() {
@@ -6,3 +9,9 @@ export function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 }
+
+function useSupabaseClient() {
+  return useMemo(createClient, []);
+}
+
+export default useSupabaseClient;

@@ -27,9 +27,47 @@ export async function GET(request: Request) {
         },
       }
     )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}/app/`)
+      // Store user information in the database
+      const { user, session } = data
+      const { provider_refresh_token } = session
+
+      // Check if the user's UUID already exists in the database
+      const { data: existingUser, error: fetchError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', user.id)
+        .single()
+
+      if (fetchError) {
+        console.error('Error fetching user from database:', fetchError)
+      } else {
+        if (existingUser) {
+          // User exists, update the provider_refresh_token
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({ provider_refresh_token })
+            .eq('id', user.id)
+
+          if (updateError) {
+            console.error('Error updating user in database:', updateError)
+          } else {
+            return NextResponse.redirect(`${origin}/app/`)
+          }
+        } else {
+          // User doesn't exist, insert a new record
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert([{ id: user.id, email: user.email, provider_refresh_token }])
+
+          if (insertError) {
+            console.error('Error creating user in database:', insertError)
+          } else {
+            return NextResponse.redirect(`${origin}/app/`)
+          }
+        }
+      }
     }
   }
 

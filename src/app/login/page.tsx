@@ -1,9 +1,26 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from 'next/image'
 import GoogleLoginButton from "./googleLogin";
+import useSupabaseClient from "@/utils/supabase/client";
 
 export default async function Login() {  
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+  
+  useEffect(() => {
+    const checkUserAndRedirect = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        router.push("/app");
+      }
+    };
+
+    checkUserAndRedirect();
+  }, []);
+
   return (
     <main className="flex justify-center p-24">
       <div className="bg-white flex flex-col items-center p-8 rounded-lg max-w-md w-full">

@@ -5,13 +5,16 @@ import useSupabaseClient from "@/utils/supabase/client";
 export default function GoogleLoginButton() {
     const supabase = useSupabaseClient();
 
-
     const handleGoogleLogin = async () => {
         supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
               redirectTo: `${location.origin}/auth/callback`,
               scopes: 'https://www.googleapis.com/auth/gmail.modify',
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'consent',
+                },
             },
           });
     };

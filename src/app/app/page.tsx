@@ -1,13 +1,14 @@
-import { useEffect } from 'react';
-import { redirect }  from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Image from 'next/image'
 import readUserSession from '@/utils/actions';
 import SignOut from './signOut';
 
 export default async function Main() {
-  const { data } = await readUserSession();
+  const { data:session } = await readUserSession();
   
-  if (!data.session) {
+  console.log(session)
+
+  if (!session.session) {
     redirect('/login');
   } else return (
     <main className="flex justify-center p-24">

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from 'next/image'
-import GoogleLoginButton from "./googleLogin";
+import GoogleLoginButton from "./components/googleLogin";
 import useSupabaseClient from "@/utils/supabase/client";
 
 export default async function Login() {  
@@ -14,7 +14,7 @@ export default async function Login() {
     const checkUserAndRedirect = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        router.push("/app");
+        router.push("/home");
       }
     };
 

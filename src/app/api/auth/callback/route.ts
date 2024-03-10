@@ -53,7 +53,7 @@ export async function GET(request: Request) {
           if (updateError) {
             console.error('Error updating user in database:', updateError)
           } else {
-            return NextResponse.redirect(`${origin}/app/`)
+            return NextResponse.redirect(`${origin}/home/`)
           }
         } else {
           // User doesn't exist, insert a new record
@@ -64,7 +64,7 @@ export async function GET(request: Request) {
           if (insertError) {
             console.error('Error creating user in database:', insertError)
           } else {
-            return NextResponse.redirect(`${origin}/app/`)
+            return NextResponse.redirect(`${origin}/home/`)
           }
         }
       }

@@ -9,7 +9,7 @@ export default function GoogleLoginButton() {
         supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-              redirectTo: `${location.origin}/auth/callback`,
+              redirectTo: `${location.origin}/api/auth/callback`,
               scopes: 'https://www.googleapis.com/auth/gmail.modify',
             queryParams: {
                 access_type: 'offline',

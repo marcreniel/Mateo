@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
+import readUserSession from '@/utils/actions';
 
 const gmail = google.gmail({ version: 'v1' });
 
@@ -10,12 +11,18 @@ function decodeBase64(data: string) {
   }
   
 export async function GET(request: NextRequest) {
-  try {
+  const { data:session } = await readUserSession();
+
+  if (!session.session) {
+    try {
+    //@ts-ignore
+    const token = session.session.provider_token;
+    console.log('token', token)
     const auth = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
     );
-    auth.setCredentials({ access_token: "ya29.a0Ad52N39Yr7E0nitcrR59QJbAkLaM7DyF0vSHlmqlzFwQc_9RX7NtYP4M_eCI7PiKqiIbY61ChOMJm4dOvvlnIkhkAdYfqrRh0PAV2Yx1t3yWeJWY4OubZQ3F3TYi0O-0QDyBVCmy3-H65psQ5nuGLs3sp2gmf8RC3hyZaCgYKAbYSARESFQHGX2MimJvWrB1XZiyHdHQ4ODoQag0171" });
+    auth.setCredentials({ access_token: "provider token here" });
 
     google.options({ auth });
 
@@ -64,11 +71,12 @@ export async function GET(request: NextRequest) {
         })
     );
 
-    console.log(emailDetails)
-
     return NextResponse.json({ emails: emailDetails }, { status: 200 });
   } catch (err) {
     console.error('Error reading emails:', err);
     return NextResponse.json({ error: 'Failed to read emails' }, { status: 500 });
+  }
+  } else {
+    return NextResponse.json({ error: 'Not logged in' }, { status: 401 });
   }
 }

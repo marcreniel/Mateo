@@ -1,8 +1,8 @@
 "use server"
 
-import useSupabaseClient from '../supabase/client'
+import supabaseServerClient from "../supabase/server"
 
-export default async function readUserSession() {
-    const supabase = useSupabaseClient()
-    return supabase.auth.getSession()
+export default async function readUserSession(){
+    const supabase = supabaseServerClient()
+    return await supabase.auth.getSession()
 }

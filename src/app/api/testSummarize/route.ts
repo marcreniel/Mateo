@@ -16,8 +16,6 @@ export async function GET(request: NextRequest) {
   const decodedEmail = decodeURIComponent(encodedEmail);
   const jsonEmail = JSON.parse(decodedEmail);
 
-  console.log(jsonEmail);
-
   const chatCompletion = await openai.chat.completions.create({
     messages: [{ role: 'user', content: 
     `For this prompt, You will never do, talk, or add anything else other than the instructions. There will be two below. Return extremly strictly.

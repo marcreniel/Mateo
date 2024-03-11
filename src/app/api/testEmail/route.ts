@@ -13,70 +13,65 @@ function decodeBase64(data: string) {
 export async function GET(request: NextRequest) {
   const { data:session } = await readUserSession();
 
-  if (!session.session) {
-    try {
-    //@ts-ignore
-    const token = session.session.provider_token;
-    console.log('token', token)
-    const auth = new google.auth.OAuth2(
-        process.env.GOOGLE_CLIENT_ID,
-        process.env.GOOGLE_CLIENT_SECRET,
-    );
-    auth.setCredentials({ access_token: "provider token here" });
+  if (session.session) {
+        try {
+        //@ts-ignore
+        const token = session.session.provider_token;
+        const auth = new google.auth.OAuth2(
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
+        );
+        auth.setCredentials({ access_token: token});
 
-    google.options({ auth });
+        google.options({ auth });
 
-    const today = new Date().toISOString().split('T')[0];
-    const query = `after:${today}`;
-
-    const listResponse = await gmail.users.messages.list({
-      userId: 'me',
-      q: query,
-    });
-
-    if (!listResponse.data.messages) {
-      return NextResponse.json({ emails: [] }, { status: 200 });
-    }
-
-    const emailDetails = await Promise.all(
-      listResponse.data.messages
-        .filter((message) => typeof message.id === 'string') // Filter out any messages that don't have an 'id' as a string
-        .map(async (message) => {
-          const id = message.id as string; // TypeScript type assertion, we've already filtered nulls/undefined
-          const msgResponse = await gmail.users.messages.get({
-            userId: 'me',
-            id: id,
-            format: 'full',
-          });
-
-          // Construct email data
-          const emailData: any = {
-            snippet: msgResponse.data.snippet,
-          };
-
-          // Extract headers like 'Subject' and 'From'
-        msgResponse.data.payload?.headers?.forEach((header) => {
-            if (header.name === 'Subject') {
-                emailData.subject = header.value;
-            } else if (header.name === 'From') {
-                emailData.from = header.value;
-            }
+        const listResponse = await gmail.users.messages.list({
+        userId: 'me',
+        maxResults: 5,
         });
-
-        const part = msgResponse.data.payload?.parts?.find(part => part.mimeType === 'text/plain');
-        if (part && part.body?.data) {
-            emailData.content = decodeBase64(part.body.data);
+            
+        if (!listResponse.data.messages) {
+        return NextResponse.json({ error: "no emails found" }, { status: 401 });
         }
-          return emailData;
-        })
-    );
 
-    return NextResponse.json({ emails: emailDetails }, { status: 200 });
-  } catch (err) {
-    console.error('Error reading emails:', err);
-    return NextResponse.json({ error: 'Failed to read emails' }, { status: 500 });
-  }
-  } else {
-    return NextResponse.json({ error: 'Not logged in' }, { status: 401 });
-  }
+        const emailDetails = await Promise.all(
+        listResponse.data.messages
+            .filter((message) => typeof message.id === 'string') // Filter out any messages that don't have an 'id' as a string
+            .map(async (message) => {
+            const id = message.id as string; // TypeScript type assertion, we've already filtered nulls/undefined
+            const msgResponse = await gmail.users.messages.get({
+                userId: 'me',
+                id: id,
+                format: 'full',
+            });
+
+            // Construct email data
+            const emailData: any = {
+                snippet: msgResponse.data.snippet,
+            };
+
+            // Extract headers like 'Subject' and 'From'
+            msgResponse.data.payload?.headers?.forEach((header) => {
+                if (header.name === 'Subject') {
+                    emailData.subject = header.value;
+                } else if (header.name === 'From') {
+                    emailData.from = header.value;
+                }
+            });
+
+            const part = msgResponse.data.payload?.parts?.find(part => part.mimeType === 'text/plain');
+            if (part && part.body?.data) {
+                emailData.content = decodeBase64(part.body.data);
+            }
+            return emailData;
+            })
+
+        );
+        return NextResponse.json({ emails: emailDetails }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ error: 'Failed to read emails' }, { status: 500 });
+    }
+    } else {
+        return NextResponse.json({ error: 'Not logged in' }, { status: 401 });
+    }
 }

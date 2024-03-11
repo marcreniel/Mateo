@@ -2,11 +2,11 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image'
 import readUserSession from '@/utils/actions';
 import SignOut from './components/signOut';
-import TestEmail from './components/textEmail';
+import TestEmail from './components/TestEmailClient';
 
 export default async function Home() {
   const { data:session } = await readUserSession();
-  
+    
   if (!session.session) {
     redirect('/login');
   } else return (

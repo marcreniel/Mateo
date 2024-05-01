@@ -18,9 +18,14 @@ export default function TestEmailClient() {
         var summaryArrays = []
         for (const email of emails) {
             const stringedEmail = JSON.stringify(email);
-            const encodedEmail = encodeURIComponent(stringedEmail);
-
-            const data = await fetch('/api/testSummarize?email=' + encodedEmail);
+                
+            const data = await fetch('/api/testSummarize', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: stringedEmail,
+              });            
             const parsed = await data.json();
             summaryArrays.push(parsed);
         }

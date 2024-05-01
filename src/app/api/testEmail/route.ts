@@ -12,7 +12,8 @@ function decodeBase64(data: string) {
   
 export async function GET(request: NextRequest) {
   const { data:session } = await readUserSession();
-
+    console.log(session.session)
+    
   if (session.session) {
         try {
         //@ts-ignore
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
         userId: 'me',
         maxResults: 5,
         });
-            
+        
         if (!listResponse.data.messages) {
         return NextResponse.json({ error: "no emails found" }, { status: 401 });
         }
@@ -70,6 +71,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ emails: emailDetails }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ error: 'Failed to read emails' }, { status: 500 });
+        
     }
     } else {
         return NextResponse.json({ error: 'Not logged in' }, { status: 401 });

@@ -6,8 +6,8 @@ import TestEmail from './components/TestEmailClient';
 
 export default async function Home() {
   const { data:session } = await readUserSession();
-    
-  if (!session.session) {
+  console.log(session.session)
+  if (!session.session || !session.session.provider_token ) {
     redirect('/login');
   } else return (
     <main className="flex justify-center p-24">

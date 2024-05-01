@@ -34,15 +34,12 @@ export async function GET(request: Request) {
       const { provider_refresh_token } = session
 
       // Check if the user's UUID already exists in the database
-      const { data: existingUser, error: fetchError } = await supabase
+      const { data: existingUser } = await supabase
         .from('users')
         .select('id')
         .eq('id', user.id)
         .single()
 
-      if (fetchError) {
-        console.error('Error fetching user from database:', fetchError)
-      } else {
         if (existingUser) {
           // User exists, update the provider_refresh_token
           const { error: updateError } = await supabase
@@ -69,7 +66,6 @@ export async function GET(request: Request) {
         }
       }
     }
-  }
 
   // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/login/`)

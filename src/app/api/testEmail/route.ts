@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import readUserSession from '@/utils/actions';
+import { readUserSession, getUserToken } from '@/utils/actions';
 
 const gmail = google.gmail({ version: 'v1' });
 
@@ -13,11 +13,11 @@ function decodeBase64(data: string) {
 export async function GET(request: NextRequest) {
   const { data:session } = await readUserSession();
     console.log(session.session)
-    
+
   if (session.session) {
         try {
         //@ts-ignore
-        const token = session.session.provider_token;
+        const token = await getUserToken();
         const auth = new google.auth.OAuth2(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,

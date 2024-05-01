@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     if (!error) {
       // Store user information in the database
       const { user, session } = data
-      const { provider_refresh_token } = session
+      const { provider_token, provider_refresh_token } = session
 
       // Check if the user's UUID already exists in the database
       const { data: existingUser } = await supabase
@@ -41,10 +41,10 @@ export async function GET(request: Request) {
         .single()
 
         if (existingUser) {
-          // User exists, update the provider_refresh_token
+          // User exists, update the provider_refresh_token and cur_session
           const { error: updateError } = await supabase
             .from('users')
-            .update({ provider_refresh_token })
+            .update({ provider_refresh_token, cur_session: provider_token })
             .eq('id', user.id)
 
           if (updateError) {
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
           // User doesn't exist, insert a new record
           const { error: insertError } = await supabase
             .from('users')
-            .insert([{ id: user.id, email: user.email, provider_refresh_token }])
+            .insert([{ id: user.id, email: user.email, provider_refresh_token, cur_session: provider_token }])
 
           if (insertError) {
             console.error('Error creating user in database:', insertError)

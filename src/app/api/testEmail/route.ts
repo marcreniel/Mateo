@@ -12,7 +12,6 @@ function decodeBase64(data: string) {
   
 export async function GET(request: NextRequest) {
     const { data:session } = await readUserSession();
-    console.log(session.session)
 
     if (session.session) {
         try {
@@ -25,33 +24,32 @@ export async function GET(request: NextRequest) {
             process.env.GOOGLE_CLIENT_SECRET,
         );
         auth.setCredentials({ access_token: token});
+        google.options({ auth });
 
-        // Try authenticating, if not send refresh token call to get new token
+
+        // Test auth with ping, if not send refresh token call to get new token
         try {
-            google.options({ auth });
+            const ping = await gmail.users.getProfile({ userId: 'me' });
         } catch (err) {
-            if ("test") {
-                const tryRefresh = await refreshGoogleToken();
-                if(tryRefresh){
-                    const token = await getUserToken();
-                    auth.setCredentials({ access_token: token });
-                    google.options({ auth });
-                } else {
-                    return NextResponse.json({ error: "Refreshing token produced err" }, { status: 500 });
-                }
+            console.log("hi")
+            const tryRefresh = await refreshGoogleToken();
+            console.log(tryRefresh)
+            if(tryRefresh){
+                const token = await getUserToken();
+                auth.setCredentials({ access_token: token });
+                google.options({ auth });
+            } else {
+                return NextResponse.json({ error: "Refreshing token produced err" }, { status: 500 });
             }
-            else {
-                return NextResponse.json({ error: "Refresh token/token invalid" }, { status: 500 });    
-            }
-        }   
+        } 
 
         const listResponse = await gmail.users.messages.list({
         userId: 'me',
         maxResults: 5,
         });
-        
+
         if (!listResponse.data.messages) {
-        return NextResponse.json({ error: "no emails found" }, { status: 401 });
+            return NextResponse.json({ error: "no emails found" }, { status: 401 });
         }
 
         const emailDetails = await Promise.all(
@@ -89,8 +87,7 @@ export async function GET(request: NextRequest) {
         );
         return NextResponse.json({ emails: emailDetails }, { status: 200 });
     } catch (err) {
-        return NextResponse.json({ error: 'Failed to read emails' }, { status: 500 });
-        
+        return NextResponse.json({ error: err}, { status: 500 });
     }
     } else {
         return NextResponse.json({ error: 'Not logged in' }, { status: 401 });

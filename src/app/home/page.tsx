@@ -6,7 +6,6 @@ import TestEmail from './components/TestEmailClient';
 
 export default async function Home() {
   const { data:session } = await readUserSession();
-  console.log(session)
 
   if (!session.session) {
     redirect('/login');

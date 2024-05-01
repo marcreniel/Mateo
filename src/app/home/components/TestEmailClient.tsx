@@ -30,8 +30,20 @@ export default function TestEmailClient() {
             summaryArrays.push(parsed);
         }
         setSummaries(summaryArrays);
-        console.log(summaryArrays)
+        handleSend(summaries);
+    };
+
+    const handleSend = async (summaries: JSON[]) => {
+      const data = await fetch('/api/testCompose', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(summaries),
+      });   
+      console.log(data)
     }
+    
 
   return (
     <TestEmailServerComponent onTestEmail={handleTestEmail} emails={emails} />

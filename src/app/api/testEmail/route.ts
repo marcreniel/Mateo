@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { readUserSession, getUserToken } from '@/utils/actions';
+import { readUserSession, getUserToken, refreshGoogleToken } from '@/utils/actions';
 
 const gmail = google.gmail({ version: 'v1' });
 
@@ -11,20 +11,39 @@ function decodeBase64(data: string) {
   }
   
 export async function GET(request: NextRequest) {
-  const { data:session } = await readUserSession();
+    const { data:session } = await readUserSession();
     console.log(session.session)
 
-  if (session.session) {
+    if (session.session) {
         try {
-        //@ts-ignore
+        // Get the user's token from db
         const token = await getUserToken();
+        
+        // Create an OAuth2 client, append token
         const auth = new google.auth.OAuth2(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,
         );
         auth.setCredentials({ access_token: token});
 
-        google.options({ auth });
+        // Try authenticating, if not send refresh token call to get new token
+        try {
+            google.options({ auth });
+        } catch (err) {
+            if ("test") {
+                const tryRefresh = await refreshGoogleToken();
+                if(tryRefresh){
+                    const token = await getUserToken();
+                    auth.setCredentials({ access_token: token });
+                    google.options({ auth });
+                } else {
+                    return NextResponse.json({ error: "Refreshing token produced err" }, { status: 500 });
+                }
+            }
+            else {
+                return NextResponse.json({ error: "Refresh token/token invalid" }, { status: 500 });    
+            }
+        }   
 
         const listResponse = await gmail.users.messages.list({
         userId: 'me',

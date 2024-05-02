@@ -1,25 +1,31 @@
 import { redirect } from 'next/navigation';
-import Image from 'next/image'
 import { readUserSession } from '@/utils/actions';
-import SignOut from './components/SignOut';
+import Navigation from './components/Navbar';
 import TestEmail from './components/TestEmailClient';
 
 export default async function Home() {
+  // Get the user session and check if the user is logged in
   const { data:session } = await readUserSession();
 
   if (!session.session) {
     redirect('/login');
-  } else return (
-    
-    <main className="flex flex-row p-24 jusify-center">
-      <div className="bg-white flex flex-col items-center p-8 rounded-lg max-w-md w-full">
-        <Image src="/logo.png" alt="Logo" width={250} height={250}/>
-        <TestEmail/>
-        <div className="flex justify-center mb-4">
-          <span className="text-gray-500 mx-2">OR</span>
+  } else {
+    // Get the user's email, name, and avatar, then pass as props to navbar
+    const email = session.session.user.email;
+    const name = session.session.user.user_metadata.full_name;
+    const avatar = session.session.user.user_metadata.avatar_url;
+    const navigationProps = {email, name, avatar};
+
+    // Ping the avatar URL to cache it
+    await fetch(avatar);
+
+    return (
+      <main className="bg-harvest-gold-100 h-screen">
+        <Navigation props={navigationProps} />
+        <div className="bg-white flex flex-col items-center p-8 rounded-lg max-w-md w-full">
+          <TestEmail/>
         </div>
-        <SignOut/>
-      </div>
-    </main>
-  );
+      </main>
+    );
+  }
 }

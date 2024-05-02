@@ -10,8 +10,6 @@ export default function Navigation(props: any) {
     // Initialize the clients and router and get the user session
     const { email, name, avatar } = props.props;
 
-    console.log(email, name, avatar);
-
     const supabase = useSupabaseClient();
     const router = useRouter();
 
@@ -23,7 +21,7 @@ export default function Navigation(props: any) {
     return (
         <Navbar>
             <NavbarBrand>
-                <Image src="/logo.png" alt="Mateo" width={100} height={100} />
+                <Image src="/logo.svg" alt="Mateo" width={75} height={75} />
             </NavbarBrand>
 
             <NavbarContent as="div" justify="end">

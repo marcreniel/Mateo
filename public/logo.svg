@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650.2 180.65">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-2 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-3 {
+        font-family: RecklessNeue-Medium, 'Reckless Neue';
+        font-size: 250px;
+        font-weight: 500;
+      }
+
+      .cls-4 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-5 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-6 {
+        letter-spacing: -.06em;
+      }
+    </style>
+  </defs>
+  <text class="cls-3" transform="translate(-9.03 166.99)"><tspan class="cls-6" x="0" y="0">M</tspan><tspan class="cls-1" x="219.19" y="0">a</tspan><tspan class="cls-4" x="338.4" y="0">t</tspan><tspan class="cls-5" x="410.01" y="0">e</tspan><tspan class="cls-2" x="527.76" y="0">o</tspan></text>
+</svg>

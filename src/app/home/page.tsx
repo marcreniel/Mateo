@@ -6,7 +6,6 @@ import TestEmail from './components/TestEmailClient';
 export default async function Home() {
   // Get the user session and check if the user is logged in
   const { data:session } = await readUserSession();
-
   if (!session.session) {
     redirect('/login');
   } else {

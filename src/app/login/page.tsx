@@ -7,9 +7,11 @@ import GoogleLoginButton from "./components/googleLogin";
 import useSupabaseClient from "@/utils/supabase/client";
 
 export default async function Login() {  
+  // Initialize the Supabase client and router
   const supabase = useSupabaseClient();
   const router = useRouter();
   
+  // Check if the user is already logged in
   useEffect(() => {
     const checkUserAndRedirect = async () => {
       const { data: { user } } = await supabase.auth.getUser();

@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 
 export async function GET(request: Request) {
+  // Extract the callback code from the URL
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? '/'
 
+  // If the code is present, exchange it for a session, and store it in a cookie
   if (code) {
     const cookieStore = cookies()
     const supabase = createServerClient(
@@ -27,7 +27,9 @@ export async function GET(request: Request) {
         },
       }
     )
+
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+
     if (!error) {
       // Store user information in the database
       const { user, session } = data
@@ -48,6 +50,7 @@ export async function GET(request: Request) {
             .eq('id', user.id)
 
           if (updateError) {
+            // Log an error if the db update fails
             console.error('Error updating user in database:', updateError)
           } else {
             return NextResponse.redirect(`${origin}/home/`)
@@ -59,6 +62,7 @@ export async function GET(request: Request) {
             .insert([{ id: user.id, email: user.email, provider_refresh_token, cur_session: provider_token }])
 
           if (insertError) {
+            // Log an error if the db insert fails
             console.error('Error creating user in database:', insertError)
           } else {
             return NextResponse.redirect(`${origin}/home/`)
@@ -67,6 +71,6 @@ export async function GET(request: Request) {
       }
     }
 
-  // return the user to an error page with instructions
+  // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/login/`)
 }

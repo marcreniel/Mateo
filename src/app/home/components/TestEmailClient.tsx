@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import TestEmailServerComponent from './TestEmailServerComponent';
 
 export default function TestEmailClient() {
+    // Initialize the states
     const [emails, setEmails] = useState<JSON[]>([]);
     const [summaries, setSummaries] = useState<JSON[]>([]);
 
+    // Starts email send flow when the button is clicked, fetches email
     const handleTestEmail = async () => {
         const data = await fetch('/api/testEmail');
         const { emails } = await data.json();
@@ -14,6 +16,7 @@ export default function TestEmailClient() {
         handleSummarize(emails);
     };
 
+    // Summarizes the emails
     const handleSummarize = async (emails: JSON[]) => {
         var summaryArrays = []
         for (const email of emails) {
@@ -33,6 +36,7 @@ export default function TestEmailClient() {
         handleSend(summaries);
     };
 
+    // Sends the email with the summaries
     const handleSend = async (summaries: JSON[]) => {
       const data = await fetch('/api/testCompose', {
         method: 'POST',

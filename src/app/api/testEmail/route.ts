@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { readUserSession, getUserToken, refreshGoogleToken } from '@/utils/actions';
 
+// Create a new Gmail client
 const gmail = google.gmail({ version: 'v1' });
 
 // Base64 decoding function
@@ -11,8 +12,10 @@ function decodeBase64(data: string) {
   }
   
 export async function GET(request: NextRequest) {
+    // Get the user session
     const { data:session } = await readUserSession();
 
+    // If the user is logged in, continue with email fetching (this safely assume that provider token exists in db)
     if (session.session) {
         try {
         // Get the user's token from db
@@ -26,32 +29,35 @@ export async function GET(request: NextRequest) {
         auth.setCredentials({ access_token: token});
         google.options({ auth });
 
-
         // Test auth with ping, if not send refresh token call to get new token
         try {
             const ping = await gmail.users.getProfile({ userId: 'me' });
         } catch (err) {
-            console.log("hi")
+            // If the token is expired, refresh it using util function
             const tryRefresh = await refreshGoogleToken();
-            console.log(tryRefresh)
             if(tryRefresh){
+                // Get the refreshed token from db and set it to the OAuth2 client
                 const token = await getUserToken();
                 auth.setCredentials({ access_token: token });
                 google.options({ auth });
             } else {
+                // If the refresh token fails, return an error
                 return NextResponse.json({ error: "Refreshing token produced err" }, { status: 500 });
             }
         } 
 
+        // Fetch the user's emails
         const listResponse = await gmail.users.messages.list({
         userId: 'me',
         maxResults: 5,
         });
 
+        // If there are no emails, return an error
         if (!listResponse.data.messages) {
             return NextResponse.json({ error: "no emails found" }, { status: 401 });
         }
 
+        // Map over each email and extract the necessary data
         const emailDetails = await Promise.all(
         listResponse.data.messages
             .filter((message) => typeof message.id === 'string') // Filter out any messages that don't have an 'id' as a string
@@ -77,6 +83,7 @@ export async function GET(request: NextRequest) {
                 }
             });
 
+            // Extract the email content
             const part = msgResponse.data.payload?.parts?.find(part => part.mimeType === 'text/plain');
             if (part && part.body?.data) {
                 emailData.content = decodeBase64(part.body.data);
@@ -87,9 +94,11 @@ export async function GET(request: NextRequest) {
         );
         return NextResponse.json({ emails: emailDetails }, { status: 200 });
     } catch (err) {
+        // If there is an error during email extraction, return the error message
         return NextResponse.json({ error: err}, { status: 500 });
     }
     } else {
+        // If the user is not logged in, return an error
         return NextResponse.json({ error: 'Not logged in' }, { status: 401 });
     }
 }

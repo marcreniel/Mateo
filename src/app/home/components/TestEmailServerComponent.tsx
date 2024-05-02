@@ -1,9 +1,8 @@
 interface Props {
   onTestEmail: () => Promise<void>;
-  emails: any[];
 }
 
-export default function TestEmailServerComponent({ onTestEmail, emails }: Props) {
+export default function TestEmailServerComponent({ onTestEmail }: Props) {
   return (
     <button
       onClick={() => onTestEmail()}

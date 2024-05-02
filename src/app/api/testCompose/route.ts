@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     // Send the email using the Resend API
     const { data, error } = await resend.emails.send({
         from: 'Mateo <onboarding@resend.dev>',
-        to: [``],
+        to: [`marcbernardino2005@gmail.com`],
         subject: 'Your daily inbox summary 🚀',
         react: EmailSummary(jsonArray),
       });

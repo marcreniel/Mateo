@@ -1,21 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import TestEmailServerComponent from './TestEmailServerComponent';
 
 export default function TestEmailClient() {
-    // Initialize the states
-    const [emails, setEmails] = useState<JSON[]>([]);
-    const [summaries, setSummaries] = useState<JSON[]>([]);
-
     // Starts email send flow when the button is clicked, fetches email
     const handleTestEmail = async () => {
         const data = await fetch('/api/testEmail');
         const { emails } = await data.json();
-        setEmails(emails);
         handleSummarize(emails);
     };
-
+    
     // Summarizes the emails
     const handleSummarize = async (emails: JSON[]) => {
         var summaryArrays = []
@@ -32,8 +26,7 @@ export default function TestEmailClient() {
             const parsed = await data.json();
             summaryArrays.push(parsed);
         }
-        setSummaries(summaryArrays);
-        handleSend(summaries);
+        handleSend(summaryArrays);
     };
 
     // Sends the email with the summaries
@@ -50,6 +43,6 @@ export default function TestEmailClient() {
     
 
   return (
-    <TestEmailServerComponent onTestEmail={handleTestEmail} emails={emails} />
+    <TestEmailServerComponent onTestEmail={handleTestEmail}/>
   );
 }

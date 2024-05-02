@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Image from 'next/image'
 import { readUserSession } from '@/utils/actions';
-import SignOut from './components/signOut';
+import SignOut from './components/SignOut';
 import TestEmail from './components/TestEmailClient';
 
 export default async function Home() {
@@ -10,7 +10,8 @@ export default async function Home() {
   if (!session.session) {
     redirect('/login');
   } else return (
-    <main className="flex justify-center p-24">
+    
+    <main className="flex flex-row p-24 jusify-center">
       <div className="bg-white flex flex-col items-center p-8 rounded-lg max-w-md w-full">
         <Image src="/logo.png" alt="Logo" width={250} height={250}/>
         <TestEmail/>

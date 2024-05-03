@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { readUserSession } from '@/utils/actions';
-import Navigation from './components/Navbar';
+import Navigation from './components/navbar';
 import HomeContent from './components/homeContent';
 
 export default async function Home() {
@@ -15,7 +15,7 @@ export default async function Home() {
     const avatar = session.session.user.user_metadata.avatar_url;
     const navigationProps = {email, name, avatar};
 
-    // Ping the avatar URL to cache it
+    // Ping the avatar URL so Google can cache it (and display in the navbar)
     await fetch(avatar);
 
     return (

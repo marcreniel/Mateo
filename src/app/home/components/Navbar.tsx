@@ -5,7 +5,7 @@ import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, Drop
 import Image from 'next/image'
 import useSupabaseClient from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation'
-import TestEmail from './TestEmailClient';
+import TestEmail from './testEmailClient';
 
 export default function Navigation(props: any) {
     // Initialize the clients and router and get the user session

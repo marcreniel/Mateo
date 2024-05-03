@@ -1,3 +1,5 @@
+// Email template for the daily summary email
+
 import {
   Body,
   Container,

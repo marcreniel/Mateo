@@ -64,7 +64,7 @@ export default function TestEmailClient() {
   
   return (
     <>
-      <Button onPress={onOpen}>Handle Test Email</Button>
+      <Button variant="bordered" onPress={onOpen}>Handle Test Email</Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={false} hideCloseButton={true}> 
         <ModalContent>
           {(onClose) => (

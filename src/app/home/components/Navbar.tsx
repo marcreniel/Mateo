@@ -5,6 +5,7 @@ import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, Drop
 import Image from 'next/image'
 import useSupabaseClient from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation'
+import TestEmail from './TestEmailClient';
 
 export default function Navigation(props: any) {
     // Initialize the clients and router and get the user session
@@ -23,6 +24,7 @@ export default function Navigation(props: any) {
             <NavbarBrand>
                 <Image src="/logo.svg" alt="Mateo" width={75} height={75} />
             </NavbarBrand>
+            <TestEmail/>
 
             <NavbarContent as="div" justify="end">
                 <Dropdown placement="bottom-end">

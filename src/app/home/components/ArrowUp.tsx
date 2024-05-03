@@ -1,3 +1,5 @@
+// Svg icon for the arrow up 
+
 import Image from "next/image";
 
 export default function ArrowUp() {

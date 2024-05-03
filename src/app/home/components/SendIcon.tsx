@@ -1,3 +1,5 @@
+// Svg icon for the send icon
+
 import Image from "next/image";
 
 export default function SendIcon() {

@@ -11,21 +11,22 @@ export default function Navigation(props: any) {
     // Initialize the clients and router and get the user session
     const { email, name, avatar } = props.props;
 
+    // Initialize the clients and router
     const supabase = useSupabaseClient();
     const router = useRouter();
 
+    // Signs the user out
     async function signOut() {
         await supabase.auth.signOut();
         router.push("/login");
     }
 
     return (
-        <Navbar>
+        <Navbar isBlurred={false} className="bg-transparent">
             <NavbarBrand>
                 <Image src="/logo.svg" alt="Mateo" width={75} height={75} />
             </NavbarBrand>
             <TestEmail/>
-
             <NavbarContent as="div" justify="end">
                 <Dropdown placement="bottom-end">
                     <DropdownTrigger>

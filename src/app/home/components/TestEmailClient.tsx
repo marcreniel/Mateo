@@ -1,7 +1,7 @@
 'use client';
 
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image'
 import dynamic from 'next/dynamic';
 
@@ -57,14 +57,15 @@ export default function TestEmailClient() {
   }
     
   // Runs the email flow when the modal is opened
-  useEffect(() => {
+  function startFlow() {
+    onOpen();
     handleTestEmail();
     setFlow("email");
-  }, [onOpen]);
-  
+  }
+
   return (
     <>
-      <Button variant="bordered" onPress={onOpen}>Handle Test Email</Button>
+      <Button variant="bordered" onPress={() => startFlow()}>Handle Test Email</Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={false} hideCloseButton={true}> 
         <ModalContent>
           {(onClose) => (

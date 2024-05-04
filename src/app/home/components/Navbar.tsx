@@ -24,7 +24,7 @@ export default function Navigation(props: any) {
     return (
         <Navbar isBlurred={false} className="bg-transparent">
             <NavbarBrand>
-                <Image src="/logo.svg" alt="Mateo" width={75} height={75} />
+                <Image className="cursor-pointer" onClick={() => location.reload()} src="/logo.svg" alt="Mateo" width={75} height={75} />
             </NavbarBrand>
             <TestEmail/>
             <NavbarContent as="div" justify="end">

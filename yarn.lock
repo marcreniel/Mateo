@@ -420,7 +420,7 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
-"@langchain/community@~0.0.47":
+"@langchain/community@^0.0.54", "@langchain/community@~0.0.47":
   version "0.0.54"
   resolved "https://registry.yarnpkg.com/@langchain/community/-/community-0.0.54.tgz#9ada3eee7d72cebfa57684d4047f028ba3acb309"
   integrity sha512-Cw2euQbgkHz8Lox1YOtUlGhUyeQ+zxGXI4eEB2LM9qHkMrCJQwGYa7qpKnm7vgUC73T6o7ayHVW/QfbQhSs7ww==

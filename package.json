@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.9",
+    "@langchain/community": "^0.0.54",
     "@langchain/openai": "^0.0.28",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@nextui-org/react": "^2.3.6",

@@ -6,6 +6,7 @@ import HomeContent from './components/homeContent';
 export default async function Home() {
   // Get the user session and check if the user is logged in
   const { data:session } = await readUserSession();
+  
   if (!session.session) {
     redirect('/login');
   } else {

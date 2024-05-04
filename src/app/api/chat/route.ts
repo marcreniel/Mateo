@@ -3,10 +3,11 @@ import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 
 import { ChatOpenAI } from "@langchain/openai";
 
-import { LangChainStream } from '@/utils/steam/langChainStream';
+import { LangChainStream } from '@/utils/langchain/tools/langChainStream';
 
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import type { ChatPromptTemplate } from "@langchain/core/prompts";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { Calculator } from "@langchain/community/tools/calculator";
 import { pull } from "langchain/hub";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
@@ -17,10 +18,16 @@ import { Tool } from "@langchain/core/tools";
  * Basic memory formatter that stringifies and passes
  * message history directly into the model.
  */
-const formatMessage = (message: VercelChatMessage) => {
-  return `${message.role}: ${message.content}`
+function formatMessage(message: VercelChatMessage) {
+  if (message.role === "user") {
+    return new HumanMessage(message.content);
+  } else if (message.role === "assistant") {
+    return new AIMessage(message.content);
+  } else {
+    // Handle other roles or invalid roles if necessary
+    return null;
+  }
 }
-
 /*
  * This handler initializes and calls a simple chain with a prompt,
  * chat model, and output parser. See the docs for more information:
@@ -30,7 +37,6 @@ const formatMessage = (message: VercelChatMessage) => {
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const messages = body.messages ?? []
-  // WIP 
   const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage)
   const currentMessageContent = messages[messages.length - 1].content
   
@@ -67,7 +73,8 @@ export async function POST(req: NextRequest) {
 
   // Invoke the streaming log function (workaround to stream output to the agent)
   const logStream = await agentExecutor.streamLog({
-    input: currentMessageContent
+    input: currentMessageContent,
+    chat_history: formattedPreviousMessages,
   });
   
   // Initialize the encoder to parse the logStream

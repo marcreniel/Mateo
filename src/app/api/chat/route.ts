@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server'
 import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 
 import { ChatOpenAI } from "@langchain/openai";
-import { BytesOutputParser } from '@langchain/core/output_parsers'
 
 import { LangChainStream } from '@/utils/steam/langChainStream';
 
@@ -53,25 +52,28 @@ export async function POST(req: NextRequest) {
     streaming: true,
   });
 
-  const outputParser = new BytesOutputParser()
-
+  // Initialize the agent
   const agent = await createOpenAIFunctionsAgent({
     llm,
     tools,
     prompt,
   });
 
+  // Initialize the agent executor chain
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
   });
 
+  // Invoke the streaming log function (workaround to stream output to the agent)
   const logStream = await agentExecutor.streamLog({
     input: currentMessageContent
   });
   
+  // Initialize the encoder to parse the logStream
   const encoder = new TextEncoder();
   
+  // Create a custom readable stream to parse the logStream and filter the output 
   const customReadable = new ReadableStream({ 
     async start(controller) {
       for await (const chunk of logStream) {
@@ -90,11 +92,13 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  // Create a new custom LangChainStream to parse the customReadable stream
   const parsedStream = LangChainStream(customReadable, {
     onCompletion: async (completion: string) => {
       console.log('COMPLETE!', completion)
     }
 })
 
+  // Return the parsedStream as a StreamingTextResponse back to the client 
   return new StreamingTextResponse(parsedStream)
 }

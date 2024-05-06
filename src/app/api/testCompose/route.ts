@@ -7,6 +7,7 @@ import { readUserSession } from '@/utils/actions';
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_KEY);
 
 export async function POST(request: NextRequest) {
+  try {
     // Get the request body from the API call, if there is nothing return an error
     const readable = await request.text();
 
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     // Send the email using the Resend API
     const { data, error } = await resend.emails.send({
         from: 'Mateo <onboarding@resend.dev>',
-        to: [`marcbernardino2005@gmail.com`],
+        to: [`marcbernardino2005@gmail.com`], // Replace with email (WIP)
         subject: 'Your daily inbox summary 🚀',
         react: EmailSummary(jsonArray),
       });
@@ -44,4 +45,8 @@ export async function POST(request: NextRequest) {
     
     // Return the response from the Resend API
     return NextResponse.json({ status: "sent", data: data }, { status: 200 });
+  } catch (error) {
+    // Generic error handling
+    return NextResponse.json({ error: error }, { status: 500 });
+  }
 }

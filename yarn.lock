@@ -1748,6 +1748,13 @@
   resolved "https://registry.yarnpkg.com/@one-ini/wasm/-/wasm-0.1.1.tgz#6013659736c9dbfccc96e8a9c2b3de317df39323"
   integrity sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==
 
+"@peggyjs/from-mem@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@peggyjs/from-mem/-/from-mem-1.2.1.tgz#b83db5b439f1b02159fe47f5c9684bd1ee244edd"
+  integrity sha512-qh5zG8WKT36142/FqOYtpF0scRR3ZJ3H5XST1bJ/KV2FvyB5MvUB/tB9ZjihRe1iKjJD4PBOZczzwEx7hJtgMw==
+  dependencies:
+    semver "7.6.0"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -4348,6 +4355,11 @@ commander@^10.0.0, commander@^10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.1.tgz#881ee46b4f77d1c1dccc5823433aa39b022cbe06"
   integrity sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==
+
+commander@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-12.0.0.tgz#b929db6df8546080adfd004ab215ed48cf6f2592"
+  integrity sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==
 
 commander@^2.20.0:
   version "2.20.3"
@@ -7379,6 +7391,15 @@ peberminta@^0.9.0:
   resolved "https://registry.yarnpkg.com/peberminta/-/peberminta-0.9.0.tgz#8ec9bc0eb84b7d368126e71ce9033501dca2a352"
   integrity sha512-XIxfHpEuSJbITd1H3EeQwpcZbTLHc+VVr8ANI9t5sit565tsI4/xK3KWTUFE2e6QiangUkh3B0jihzmGnNrRsQ==
 
+peggy@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/peggy/-/peggy-4.0.2.tgz#440b79ff8270668294d877addb3a30bb9e28bad5"
+  integrity sha512-j4cepPgB20V7honmTAI+7U022y/n/wVi7Rbbd2QrMl2nifFECpngvA6Zhrz/JdmZ5LIBoTdkgHcDzzaA6C4ABg==
+  dependencies:
+    "@peggyjs/from-mem" "1.2.1"
+    commander "^12.0.0"
+    source-map-generator "0.8.0"
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
@@ -7939,17 +7960,17 @@ selderee@^0.11.0:
   dependencies:
     parseley "^0.12.0"
 
-semver@^6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
-  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
-
-semver@^7.0.0, semver@^7.1.1, semver@^7.3.5, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
+semver@7.6.0, semver@^7.0.0, semver@^7.1.1, semver@^7.3.5, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
   integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
   dependencies:
     lru-cache "^6.0.0"
+
+semver@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
+  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
 serialize-javascript@^6.0.1:
   version "6.0.2"
@@ -8116,6 +8137,11 @@ sonner@1.3.1:
   resolved "https://registry.yarnpkg.com/sonner/-/sonner-1.3.1.tgz#64aa2971d1110b6fe349f961d148c933f38ee9fa"
   integrity sha512-+rOAO56b2eI3q5BtgljERSn2umRk63KFIvgb2ohbZ5X+Eb5u+a/7/0ZgswYqgBMg8dyl7n6OXd9KasA8QF9ToA==
 
+source-map-generator@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/source-map-generator/-/source-map-generator-0.8.0.tgz#10d5ca0651e2c9302ea338739cbd4408849c5d00"
+  integrity sha512-psgxdGMwl5MZM9S3FWee4EgsEaIjahYV5AzGnwUvPhWeITz/j6rKpysQHlQ4USdxvINlb8lKfWGIXwfkrgtqkA==
+
 source-map-js@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
@@ -8205,6 +8231,7 @@ streamsearch@^1.1.0:
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.3:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -8276,6 +8303,7 @@ string_decoder@^1.1.1:
     safe-buffer "~5.2.0"
 
 "strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  name strip-ansi-cjs
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==

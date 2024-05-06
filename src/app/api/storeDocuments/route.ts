@@ -109,6 +109,8 @@ export async function GET(request: NextRequest) {
                             emailData.subject = header.value;
                         } else if (header.name === 'From') {
                             emailData.from = header.value;
+                        } else if (header.name === 'Date') {
+                            emailData.date = header.value;
                         }
                     });
 
@@ -128,12 +130,12 @@ export async function GET(request: NextRequest) {
                     // Also user ID to store in the vector store to query later
                     const hash = crypto.createHash('sha256').update(`${email.content}${session.session.user.id}`).digest('hex');
                     const document = {pageContent: `Subject: ${email.subject}, From: ${email.from}, Snippet: ${email.snippet}, Content: ${email.content}`,
-                                    metadata: {udid: session.session.user.id, hash: hash}};
+                                    metadata: {udid: session.session.user.id, hash: hash, date: email.date }};
                 
                     const searchResult = await vectorStore.similaritySearch(
                         `Subject: ${email.subject}, From: ${email.from}, Snippet: ${email.snippet}, Content: ${email.content}`,
                         1,
-                        { udid: session.session.user.id, hash: hash });
+                        { udid: session.session.user.id, hash: hash});
 
                     if (searchResult.length > 0) {
                         console.log("Document already exists in the vector store:");

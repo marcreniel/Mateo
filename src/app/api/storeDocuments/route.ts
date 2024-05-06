@@ -1,4 +1,3 @@
-// Work In Progress
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
@@ -78,7 +77,7 @@ export async function GET(request: NextRequest) {
                 // Fetch the user's emails
                 const listResponse = await gmail.users.messages.list({
                 userId: 'me',
-                maxResults: 20,
+                maxResults: 100,
                 });
 
                 // If there are no emails, return an error

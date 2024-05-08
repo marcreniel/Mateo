@@ -3,27 +3,17 @@ import { NextResponse } from 'next/server'
 
 import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 
-import { LangChainStream } from '@/utils/langchain/tools/langChainStream';
+import { LangChainStream } from '@/utils/langchain/langChainStream';
 
-import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { Calculator } from "@langchain/community/tools/calculator";
 import { pull } from "langchain/hub";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
-import { DynamicTool } from "@langchain/core/tools";
-
 import { Tool } from "@langchain/core/tools";
+import { ChatOpenAI } from "@langchain/openai";
 
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
-import { createClient } from "@supabase/supabase-js";
-import { readUserSession } from '@/utils/actions';
-
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { RunnablePassthrough} from "@langchain/core/runnables";
-import { RunnableSequence } from "@langchain/core/runnables";
-
+import { SummarySearchEmails } from '@/utils/tools/summarySearchEmails';
+import { SpecificEmailSearch } from '@/utils/tools/specificEmailSearch';
 /**
  * Basic memory formatter that stringifies and passes
  * message history directly into the model.
@@ -39,60 +29,6 @@ function formatMessage(message: VercelChatMessage) {
   }
 }
 
-// Fetch emails from the user's inbox (WIP, just a very rough implementation)
-async function fetchEmails(query: string) {
-  try {
-    const { data:session } = await readUserSession();
-
-    const privateKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!privateKey) throw new Error(`Expected env var SUPABASE_PRIVATE_KEY`);
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    if (!url) throw new Error(`Expected env var SUPABASE_URL`);
-
-    const client = createClient(url, privateKey);
-
-    const vectorStore = new SupabaseVectorStore(
-      new OpenAIEmbeddings({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY }),        
-      {
-      client,
-      tableName: "documents",
-      queryName: "match_documents",
-      });
-    
-    const template = `Answer the question based only on the following context:
-    {context}
-    Question: {question}`;
-
-    const prompt = ChatPromptTemplate.fromTemplate(template);
-
-    const model = new ChatOpenAI({
-      model: "gpt-3.5-turbo-0125",
-      temperature: 0,
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
-    });
-
-    const chain = RunnableSequence.from([
-      {
-        context: async (input) => {
-          return JSON.stringify(
-            await vectorStore.asRetriever(5, { udid: session.session?.user.id }).invoke(input)
-          );
-        },
-        question: new RunnablePassthrough(),
-      },
-      prompt,
-      model,
-      new StringOutputParser(),
-    ]);
-
-    const result = await chain.invoke(query);
-
-    return result;
-    } catch (error) {
-      return `Error: ${error}`;
-    }
-  }
-
 /*
  * This handler initializes and calls a simple chain with a prompt,
  * chat model, and output parser. See the docs for more information:
@@ -107,17 +43,10 @@ export async function POST(req: NextRequest) {
     const currentMessageContent = messages[messages.length - 1].content
 
     // Define the tools (WIP Example, tools just to debug agent streaming)
-    const tools: Tool[] = [new TavilySearchResults({
-      apiKey: "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"
-    }), new Calculator(), 
-    // WIP tool to search for emails (rough implementation, just for testing purposes)
-    new DynamicTool({
-      name: "SearchEmails",
-      description:
-        "Call this when you want to search for emails. Examples are when the user asks for emails or when the user asks something related to emails.",
-      func: async () => await fetchEmails(currentMessageContent),
-    }),
-  ];
+    const tools: Tool[] = [
+      new SummarySearchEmails(currentMessageContent), 
+      new SpecificEmailSearch(currentMessageContent)
+    ];
 
     // Prompt to make the agent execute functions 
     const prompt = await pull<ChatPromptTemplate>(

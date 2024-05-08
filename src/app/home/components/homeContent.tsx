@@ -1,21 +1,31 @@
 "use client";
 
 import { Button, Textarea } from "@nextui-org/react";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from 'framer-motion';
 import { useChat } from 'ai/react'
 import ArrowUp from "./arrowUp";
 import SendIcon from "./sendIcon";
+import { Avatar } from "@nextui-org/react";
 
 export default function HomeContent(props: any) {
     // Props from the parent component (name)
-    const name = props.props;
+    const { name, avatar } = props.props;
 
     // Function from the useChat hook (Vercel AI SDK)
     const { messages, input, handleInputChange, setInput, handleSubmit } = useChat()
 
     // State for the text content
     const [chatActive, setChatActive] = useState(false);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // Scroll to the bottom of the container when messages change
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     // Functions for pre-defined prompts
     const option1 = () => {
@@ -38,14 +48,36 @@ export default function HomeContent(props: any) {
     return (
         <>
         {chatActive === true && (
-            <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch overflow-y-auto" style={{ maxHeight: '80vh' }}>
-            {messages.map(m => (
-                <div key={m.id}>
-                {m.role === 'user' ? 'User: ' : 'AI: '}
-                {m.content}
-                </div>
-            ))}
+            <div className="mx-auto w-full max-w-3xl pt-24 overflow-y-auto no-scrollbar" style={{ maxHeight: '80vh' }} ref={containerRef}>
+                {messages.map(m => (
+                    <div key={m.id}>
+                        {m.role === 'user' ?  
+                            <div className="flex flex-row space-x-2">                   
+                            <Avatar
+                            className="drop-shadow-[0_0px_2px_rgba(0,0,0,0.6)] w-6 h-6 transition-transform ml-1 my-2"
+                            name={name}
+                            src={avatar}
+                            />
+                            <h2 className="font-bold pt-2">You</h2> 
+                            </div>     
+                            : 
+                            <div className="flex flex-row space-x-2">                   
+                            <Avatar
+                            className="drop-shadow-[0_0px_2px_rgba(0,0,0,0.6)] w-6 h-6 transition-transform ml-1 my-2"
+                            name="M"
+                            />
+                            <h2 className="font-bold pt-2">Mateo</h2> 
+                            </div>    
+                            }
+                        <motion.p 
+                        className="bg-harvest-gold-200 rounded-xl p-2 mb-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.4 }}>{m.content}</motion.p>
+                    </div>
+                ))}
             </div>
+
         )}
         {chatActive === false && (
         <div className="flex flex-col pt-12 h-max space-y-32">

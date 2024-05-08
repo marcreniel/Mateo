@@ -22,7 +22,7 @@ export default async function Home() {
     return (
       <main className="bg-harvest-gold-100 h-screen">
         <Navigation props={navigationProps} />
-        <HomeContent props={name}/>
+        <HomeContent props={{name, avatar}}/>
       </main>
     );
   }

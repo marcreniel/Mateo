@@ -40,12 +40,14 @@ const config: Config = {
           default: "#db9034",
           primary: "#db9034",
           secondary: "#db9034",
+          success: '#884b24',
         },
       },
       dark: {
         colors: {},
       },
     },
-  }),],
+  }), 
+],
 };
 export default config;

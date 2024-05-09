@@ -13,6 +13,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { LangChainStream } from '@/utils/langchain/langChainStream';
 import { SummarySearchEmails } from '@/utils/tools/summarySearchEmails';
 import { SpecificEmailSearch } from '@/utils/tools/specificEmailSearch';
+import { SendNewEmail } from '@/utils/tools/sendNewEmail';
 import { DraftTool } from '@/utils/tools/draftTool';
 
 /**
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
       new SummarySearchEmails(currentMessageContent), 
       new SpecificEmailSearch(currentMessageContent),
       new DraftTool(),
+      new SendNewEmail(currentMessageContent),
     ];
 
     // Prompt to make the agent execute functions 

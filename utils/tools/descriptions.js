@@ -57,7 +57,7 @@ Example Output:
   ... (other messages in the thread)
 ]"
 `;
-export const SEND_MESSAGE_DESCRIPTION = `A tool for sending an email message using Gmail. It allows users to specify recipients, subject, and the content of the message, along with optional cc and bcc fields.
+export const SEND_MESSAGE_DESCRIPTION = `A tool for sending a new email message using Gmail. It allows users to specify recipients, subject, and the content of the message, along with optional cc and bcc fields.
 
 INPUT example:
 {
@@ -69,10 +69,14 @@ INPUT example:
 }
 
 OUTPUT:
-The output is a confirmation message with the ID of the sent email. If there is an error during the sending process, the tool will throw an error with a description of the problem.
+The output is a confirmation message with the ID of the sent email.
+If there is an error during the sending process, the tool will throw an error with a description of the problem.
 
 Example Output:
 "Message sent. Message Id: unique_message_id_string"
+Example Error:
+"There was an error sending an email. (Error details)"
+
 `;
 export const SEARCH_DESCRIPTION = `A tool for searching email messages or threads in Gmail using a specific query. It offers the flexibility to choose between messages and threads as the search resource.
 

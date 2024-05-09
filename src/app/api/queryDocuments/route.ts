@@ -1,14 +1,14 @@
 // Deprecated: This API route will no longer be used in the app, but will be used as a debug tool for querying documents from the vector store.
+import { NextRequest, NextResponse } from 'next/server';
 
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 
-import { NextRequest, NextResponse } from 'next/server';
-import { readUserSession } from '@/utils/actions';
 import { createClient } from "@supabase/supabase-js";
 
+import { readUserSession } from '@/utils/actions';
+
 export async function GET(request: NextRequest) {
-    console.log("here")
     try {
         // Get the private key and url from env, throw error if not present
         const privateKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

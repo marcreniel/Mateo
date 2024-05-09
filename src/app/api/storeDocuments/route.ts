@@ -1,15 +1,14 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
-import { createClient } from "@supabase/supabase-js";
-
-import { NextRequest, NextResponse } from 'next/server';
-
 import { google } from 'googleapis';
+
 import { readUserSession, getUserToken, refreshGoogleToken } from '@/utils/actions';
+import supabaseServerClient from "@/utils/supabase/server"
 
 import crypto from 'crypto';
-
 // Create a new Gmail client
 const gmail = google.gmail({ version: 'v1' });
 
@@ -32,7 +31,7 @@ export async function GET(request: NextRequest) {
         const { data:session } = await readUserSession();
             
         // Create a new client with the private key and url to prepare VectorStore
-        const client = createClient(url, privateKey);
+        const client = supabaseServerClient();
 
         // Initialize VectorStore with the OpenAIEmbeddings and client
         const vectorStore = new SupabaseVectorStore(
@@ -48,6 +47,33 @@ export async function GET(request: NextRequest) {
             // Get the user's token from db
             const token = await getUserToken();
             
+            // Get the last query time from the user's db entry, if the query is too soon, skip the query (1 hour requery interval)
+            const { data, error } = await client
+            .from('users')
+            .select('last_query')
+
+            // If there is an error fetching query from db, return an error
+            if (error) {
+                return NextResponse.json({ error: error }, { status: 500 });
+            }
+
+            // If the last query is more than 1 hour ago or there is no last query, update the last query time
+            if(Date.now() - data[0].last_query> 60000 || !data[0].last_query){
+                const { error: updateError } = await client
+                .from('users')
+                .update({ last_query: Date.now() })
+                .eq('id', session.session.user.id)
+
+                if (updateError) {
+                    return NextResponse.json({ error: updateError }, { status: 500 });
+                }
+                // After this, storeDocuments will execute
+            } else {
+                // If the store is too soon, skip the store
+                console.log("Querying too soon, skipping query");
+                return NextResponse.json({ status: "Skipping query" }, { status: 200 });
+            }
+
             // Create an OAuth2 client, append token
             const auth = new google.auth.OAuth2(
                 process.env.GOOGLE_CLIENT_ID,
@@ -77,7 +103,7 @@ export async function GET(request: NextRequest) {
                 // Fetch the user's emails
                 const listResponse = await gmail.users.messages.list({
                 userId: 'me',
-                maxResults: 100,
+                maxResults: 25,
                 });
 
                 // If there are no emails, return an error

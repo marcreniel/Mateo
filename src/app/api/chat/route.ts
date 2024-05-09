@@ -3,17 +3,18 @@ import { NextResponse } from 'next/server'
 
 import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 
-import { LangChainStream } from '@/utils/langchain/langChainStream';
-
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { pull } from "langchain/hub";
 import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
-import { Tool } from "@langchain/core/tools";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { Tool, StructuredTool } from "@langchain/core/tools";
 import { ChatOpenAI } from "@langchain/openai";
 
+import { LangChainStream } from '@/utils/langchain/langChainStream';
 import { SummarySearchEmails } from '@/utils/tools/summarySearchEmails';
 import { SpecificEmailSearch } from '@/utils/tools/specificEmailSearch';
+import { DraftTool } from '@/utils/tools/draftTool';
+
 /**
  * Basic memory formatter that stringifies and passes
  * message history directly into the model.
@@ -30,10 +31,8 @@ function formatMessage(message: VercelChatMessage) {
 }
 
 /*
- * This handler initializes and calls a simple chain with a prompt,
- * chat model, and output parser. See the docs for more information:
- *
- * https://js.langchain.com/docs/guides/expression_language/cookbook#prompttemplate--llm--outputparser
+ * This is an agent that initializes the OpenAI GPT-3.5-turbo model,
+ * as well as tools, and output parser.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -42,10 +41,11 @@ export async function POST(req: NextRequest) {
     const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage)
     const currentMessageContent = messages[messages.length - 1].content
 
-    // Define the tools (WIP Example, tools just to debug agent streaming)
-    const tools: Tool[] = [
+    // Define the tools
+    const tools: (StructuredTool[] | Tool[]) = [
       new SummarySearchEmails(currentMessageContent), 
-      new SpecificEmailSearch(currentMessageContent)
+      new SpecificEmailSearch(currentMessageContent),
+      new DraftTool(),
     ];
 
     // Prompt to make the agent execute functions 

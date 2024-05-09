@@ -52,7 +52,6 @@ export default function TestEmailClient() {
       },
       body: JSON.stringify(summaries),
     });   
-    console.log(data)
     setFlow("done");
   }
     

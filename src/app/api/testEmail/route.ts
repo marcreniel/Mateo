@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { google } from 'googleapis';
+
 import { readUserSession, getUserToken, refreshGoogleToken } from '@/utils/actions';
 
 // Create a new Gmail client

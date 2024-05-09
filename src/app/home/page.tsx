@@ -7,6 +7,7 @@ export default async function Home() {
   // Get the user session and check if the user is logged in
   const { data:session } = await readUserSession();
   
+  // If the user is not logged in, redirect to the login page
   if (!session.session) {
     redirect('/login');
   } else {

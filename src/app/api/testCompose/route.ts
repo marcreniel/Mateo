@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { Resend } from 'resend';
+
 import { EmailSummary } from '@/utils/templates/summaryTemplate';
 import { readUserSession } from '@/utils/actions';
 

@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { readUserSession } from '@/utils/actions';
 
+import { ScoreThresholdRetriever } from "langchain/retrievers/score_threshold";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnablePassthrough} from "@langchain/core/runnables";
@@ -8,7 +8,9 @@ import { RunnableSequence } from "@langchain/core/runnables";
 import { DynamicTool } from "@langchain/core/tools";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
-import { ScoreThresholdRetriever } from "langchain/retrievers/score_threshold";
+
+import { readUserSession } from '@/utils/actions';
+
 
 // Query emails function from a user's inbox tuned for generalized summaries about an email
 async function fetchEmails(query: string) {

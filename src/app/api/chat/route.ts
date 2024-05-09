@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     
     // Initialize the ChatOpenAI model
     const llm = new ChatOpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+      apiKey: process.env.OPENAI_KEY,
       model: "gpt-3.5-turbo",
       temperature: 0,
       streaming: true,

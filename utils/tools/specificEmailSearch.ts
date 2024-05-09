@@ -18,9 +18,9 @@ async function fetchEmails(query: string) {
       const { data:session } = await readUserSession();
       
       // Get the private key and url from env, throw error if not present
-      const privateKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      const privateKey = process.env.SUPABASE_ANON_KEY;
       if (!privateKey) throw new Error(`Expected env var SUPABASE_PRIVATE_KEY`);
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const url = process.env.SUPABASE_URL;
       if (!url) throw new Error(`Expected env var SUPABASE_URL`);
   
       // Create a new client with the private key and url to prepare VectorStore
@@ -28,7 +28,7 @@ async function fetchEmails(query: string) {
   
       // Initialize VectorStore with the OpenAIEmbeddings and client
       const vectorStore = new SupabaseVectorStore(
-        new OpenAIEmbeddings({ apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY }),        
+        new OpenAIEmbeddings({ apiKey: process.env.OPENAI_KEY }),        
         {
         client,
         tableName: "documents",
@@ -47,7 +47,7 @@ async function fetchEmails(query: string) {
       const model = new ChatOpenAI({
         model: "gpt-3.5-turbo-0125",
         temperature: 0,
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+        apiKey: process.env.OPENAI_KEY,
       });
   
       // Create a Langchain RunnableSequence, which invokes the vector store and score threshold retriever

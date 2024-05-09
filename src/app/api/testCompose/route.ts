@@ -6,7 +6,7 @@ import { EmailSummary } from '@/utils/templates/summaryTemplate';
 import { readUserSession } from '@/utils/actions';
 
 // Create a new Resend instance for composing and sending emails
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_KEY);
+const resend = new Resend(process.env.RESEND_KEY);
 
 export async function POST(request: NextRequest) {
   try {

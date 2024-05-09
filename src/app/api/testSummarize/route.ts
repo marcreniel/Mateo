@@ -4,7 +4,7 @@ import { OpenAI } from 'openai';
 
 // Create a new OpenAI instance
 const openai = new OpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+    apiKey: process.env.OPENAI_KEY,
   });
 
 export async function POST(request: NextRequest) {

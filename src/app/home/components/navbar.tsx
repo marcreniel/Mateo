@@ -26,7 +26,7 @@ export default function Navigation(props: any) {
             <NavbarBrand>
                 <Image className="cursor-pointer" onClick={() => location.reload()} src="/logo.svg" alt="Mateo" width={75} height={75} />
             </NavbarBrand>
-            <TestEmail/>
+            {/* <TestEmail/> */}
             <NavbarContent as="div" justify="end">
                 <Dropdown placement="bottom-end">
                     <DropdownTrigger>

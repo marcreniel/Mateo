@@ -17,6 +17,7 @@
     "@react-email/components": "0.0.17",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.1",
+    "@tabler/icons-react": "^3.3.0",
     "ai": "^3.0.19",
     "clsx": "^2.1.1",
     "framer": "^2.4.1",

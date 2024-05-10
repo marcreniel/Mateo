@@ -1,11 +1,11 @@
-import Image from "next/image";
+import { MacbookScroll } from "./components/macbook-scroll";
+import { StickyScroll } from "./components/sticky-scroll-reveal";
 
 export default function Home() {
   return (
-    <main className="flex justify-center p-24">
-      <div className="bg-white flex flex-col items-center p-8 rounded-lg max-w-md w-full">
-        <Image src="/logo.png" alt="Logo" width={250} height={250}/>
-      </div>
+    <main className="flex flex-col justify-center bg-harvest-gold-100">
+      <MacbookScroll src="/landing.png" />
+      <StickyScroll />
     </main>
   );
 }

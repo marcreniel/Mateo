@@ -18,7 +18,7 @@ export default function Navigation(props: any) {
     // Signs the user out
     async function signOut() {
         await supabase.auth.signOut();
-        router.push("/login");
+        router.push("/");
     }
 
     return (

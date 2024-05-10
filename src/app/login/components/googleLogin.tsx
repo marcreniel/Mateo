@@ -15,7 +15,6 @@ export default function GoogleLoginButton() {
               scopes: 'https://www.googleapis.com/auth/gmail.modify',
             queryParams: {
                 access_type: 'offline',
-                prompt: 'consent',
                 },
             },
           });
